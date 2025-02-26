@@ -1,13 +1,13 @@
-const redis = require('redis');
+const {createClient} = require('redis');
 const {REDIS_CONFIG} = require('../conf/db.js');
 
 // create client side
-const redisClient = redis.createClient({
+const redisClient = createClient({
     url: `redis://${REDIS_CONFIG.host}:${REDIS_CONFIG.port}`,
-    legacyMode: true
+    legacyMode: false
 })
 
 // connect
-redisClient.connected().then(()=>console.log('redis connect success.')).catch(console.error);
+redisClient.connect().then(()=>console.log('redis connect success.')).catch(console.error);
 
 module.exports = redisClient;
