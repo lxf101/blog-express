@@ -31,7 +31,7 @@ app.use(session({
     httpOnly: true, // default set
     maxAge: 24 * 60 * 60 * 1000
   },
-  store: redisStore,
+  store: redisStore,    // session save into redis
   resave: false,
   saveUninitialized: false 
 }))
