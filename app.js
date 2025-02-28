@@ -12,12 +12,27 @@ var userRouter = require('./routes/user');
 
 var app = express();
 
-app.use(logger('dev'));
+const ENV = process.env.NODE_ENV;
+if(ENV !== 'production'){
+  // development and test environment
+  app.use(logger('dev'));
+} else {
+  // online environment
+  const logFileName = path.join(__dirname, 'logs', 'access.log')
+  const writeStream = fstat.createWriteStream(logFileName, {
+    flags: 'a'
+  })
+  app.use(logger('combined'), {
+    stream: writeStream
+  });
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-const redisClient = require('./db/redis')
+const redisClient = require('./db/redis');
+const { fstat } = require('fs');
 
 let redisStore = new RedisStore({
   client: redisClient,
